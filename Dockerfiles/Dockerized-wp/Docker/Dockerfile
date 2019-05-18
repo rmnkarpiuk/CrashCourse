@@ -69,6 +69,19 @@ VOLUME /var/lib/mysql
 VOLUME /var/log/mysql
 VOLUME /etc/apache2
 
+RUN apt-get install php-curl php-gd php-mbstring php-mcrypt php-xml php-xmlrpc -y
+COPY apache2.conf /etc/apache2/apache2.conf
+RUN a2enmod rewrite
+RUN cd /tmp
+RUN curl -O https://wordpress.org/latest.tar.gz
+RUN tar xzvf latest.tar.gz
+COPY .htaccess /tmp/wordpress/.htaccess
+# RUN touch /tmp/wordpress/.htaccess
+RUN chmod 660 /tmp/wordpress/.htaccess
+# RUN cp /tmp/wordpress/wp-config-sample.php /tmp/wordpress/wp-config.php
+RUN cp -a /tmp/wordpress/. /var/www/html
+COPY wp-config.php /var/www/html
+
 EXPOSE 80
 EXPOSE 3306
 	
